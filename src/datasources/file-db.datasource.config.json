@@ -1,0 +1,6 @@
+{
+  "name": "fileDb",
+  "connector": "memory",
+  "localStorage": "",
+  "file": "./data/file-db.json"
+}

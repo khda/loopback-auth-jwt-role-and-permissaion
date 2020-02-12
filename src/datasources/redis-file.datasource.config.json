@@ -1,0 +1,4 @@
+{
+  "name": "redisFile",
+  "connector": "kv-memory"
+}
