@@ -20,6 +20,13 @@ export class UserPermission extends Entity {
 	@belongsTo(() => User)
 	userId: number;
 
+	@property({
+		type: 'boolean',
+		required: true,
+		default: true,
+	})
+	allowed: boolean;
+
 	constructor(data?: Partial<UserPermission>) {
 		super(data);
 	}

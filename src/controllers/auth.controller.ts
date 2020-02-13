@@ -1,6 +1,6 @@
 import { inject } from '@loopback/context';
 import { repository } from '@loopback/repository';
-import { HttpErrors, post, requestBody } from '@loopback/rest';
+import { HttpErrors, param, post, requestBody } from '@loopback/rest';
 import * as crypto from 'crypto';
 import * as jwt from 'jsonwebtoken';
 import {
@@ -13,11 +13,11 @@ import { authorize } from 'loopback4-authorization';
 
 import {
 	User,
-	AuthUser,
 	LoginRequest,
 	TokenResponse,
 	// AuthTokenRequest,
 	RefreshTokenData,
+	RevokedTokenData,
 	AuthTokenRefreshRequest,
 } from '../models';
 
@@ -25,7 +25,10 @@ import {
 	UserRepository,
 	UserRoleRepository,
 	UserPermissionRepository,
+	RoleRepository,
+	PermissionRepository,
 	RefreshTokenRepository,
+	RevokedTokenDataRepository,
 } from '../repositories';
 
 const JWT_SECRET = 'plmnkoxswqaz';
@@ -61,8 +64,14 @@ export class LoginController {
 		public userRoleRepository: UserRoleRepository,
 		@repository(UserPermissionRepository)
 		public userPermissionRepository: UserPermissionRepository,
+		@repository(RoleRepository)
+		public roleRepository: RoleRepository,
+		@repository(PermissionRepository)
+		public permissionRepository: PermissionRepository,
 		@repository(RefreshTokenRepository)
 		public refreshTokenRepository: RefreshTokenRepository,
+		@repository(RevokedTokenDataRepository)
+		private readonly revokedTokenDataRepository: RevokedTokenDataRepository,
 	) { }
 
 	// @authenticateClient(STRATEGY.CLIENT_PASSWORD)
@@ -241,8 +250,14 @@ export class LoginController {
 	 * @param payload
 	 * @param authClient
 	 */
-	private async createJWT(user: User): Promise<TokenResponse> {
+	private async createJWT(oldUser: User): Promise<TokenResponse> {
 		try {
+			if (!oldUser || !oldUser.id) {
+				throw new HttpErrors.Unauthorized('UserDoesNotExist');
+			}
+
+			const user = await this.userRepository.findById(oldUser.id);
+
 			// let user: User | undefined;
 			// if (payload.user) {
 			// 	user = payload.user;
@@ -272,8 +287,7 @@ export class LoginController {
 			// authUser.role = role.roleKey.toString();
 
 
-
-			const authUser: AuthUser = new AuthUser(user);
+			// const authUser: User = new User(user);
 
 			const userRoles = await this.userRoleRepository.find({
 				where: {
@@ -284,18 +298,33 @@ export class LoginController {
 			const userPermissions = await this.userPermissionRepository.find({
 				where: {
 					userId: user.id,
+					allowed: true,
 				}
 			});
 
-			const roleIds = userRoles.map((userRole) => userRole.roleId);
-			const permissionIds =
-				userPermissions.map((userPermission) => userPermission.permissionId);
+			const roleIds = userRoles
+				.map((userRole) => userRole.roleId);
+			const permissionIds = userPermissions
+				.map((userPermission) => userPermission.permissionId);
 
-			authUser.roleIds = roleIds;
-			authUser.permissionIds = permissionIds;
+			user.roles = await this.roleRepository.find({
+				where: {
+					id: {
+						inq: roleIds
+					}
+				}
+			});
+
+			user.permissions = await this.permissionRepository.find({
+				where: {
+					id: {
+						inq: permissionIds
+					}
+				}
+			});
 
 			const accessToken = jwt.sign(
-				authUser.toJSON(),
+				user.toJSON(),
 				JWT_SECRET,
 				{
 					expiresIn: ACCESS_TOKEN_EXPIRATION,
@@ -307,7 +336,7 @@ export class LoginController {
 				crypto.randomBytes(REFRESH_TOKEN_SIZE).toString('hex');
 
 			const refreshTokenData: RefreshTokenData = new RefreshTokenData({
-				userId: authUser.id,
+				userId: user.id,
 			});
 
 			await this.refreshTokenRepository.set(
@@ -325,5 +354,41 @@ export class LoginController {
 				throw new HttpErrors.Unauthorized(AuthErrorKeys.InvalidCredentials);
 			}
 		}
+	}
+
+	@authenticate(STRATEGY.BEARER)
+	@authorize(['*'])
+	@post('auth/logout', {
+		responses: {
+			200: {
+				description: 'Logout',
+				content: {
+					'application/json': {
+						schema: { 'x-ts-type': Boolean },
+					},
+				},
+			},
+		},
+	})
+	async logout(
+		@param.header.string('Authorization') authorization: string
+	): Promise<boolean> {
+		try {
+			const token = authorization?.replace(/bearer /i, '');
+
+			if (!token) {
+				throw new HttpErrors.Unauthorized(AuthErrorKeys.TokenInvalid);
+			}
+
+			const revokedTokenData: RevokedTokenData =
+				new RevokedTokenData({ token });
+
+			await this.revokedTokenDataRepository.set(token, revokedTokenData);
+		}
+		catch (error) {
+			throw new HttpErrors.InternalServerError(AuthErrorKeys.UnknownError);
+		}
+
+		return true;
 	}
 }

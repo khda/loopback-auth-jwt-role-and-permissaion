@@ -18,18 +18,18 @@
       "4": "{\"id\":4,\"name\":\"Dog\"}"
     },
     "users": {
-      "1": "{\"username\":\"Sam\",\"password\":\"123\",\"profile\":{\"firstName\":\"string\"},\"archived\":false,\"id\":1}",
-      "2": "{\"username\":\"Kate\",\"password\":\"qwe\",\"profile\":{\"firstName\":\"string\"},\"archived\":false,\"id\":2}",
-      "3": "{\"username\":\"Tom\",\"password\":\"1q\",\"profile\":{\"firstName\":\"string\"},\"archived\":false,\"id\":3}"
+      "1": "{\"username\":\"Sam\",\"password\":\"123\",\"profile\":{\"firstName\":\"string\"},\"archived\":null,\"id\":1}",
+      "2": "{\"username\":\"Kate\",\"password\":\"qwe\",\"profile\":{\"firstName\":\"string\"},\"archived\":null,\"id\":2}",
+      "3": "{\"username\":\"Tom\",\"password\":\"1q\",\"profile\":{\"firstName\":\"string\"},\"archived\":null,\"id\":3}"
     },
     "user_permissions": {
-      "1": "{\"permissionId\":1,\"userId\":1,\"id\":1}",
-      "2": "{\"permissionId\":2,\"userId\":1,\"id\":2}",
-      "3": "{\"permissionId\":3,\"userId\":1,\"id\":3}",
-      "4": "{\"permissionId\":4,\"userId\":1,\"id\":4}",
-      "5": "{\"permissionId\":1,\"userId\":2,\"id\":5}",
-      "6": "{\"permissionId\":2,\"userId\":2,\"id\":6}",
-      "7": "{\"permissionId\":2,\"userId\":3,\"id\":7}"
+      "1": "{\"permissionId\":1,\"userId\":1,\"allowed\":true,\"id\":1}",
+      "2": "{\"permissionId\":2,\"userId\":1,\"allowed\":false,\"id\":2}",
+      "3": "{\"permissionId\":3,\"userId\":1,\"allowed\":true,\"id\":3}",
+      "4": "{\"permissionId\":4,\"userId\":1,\"allowed\":false,\"id\":4}",
+      "5": "{\"permissionId\":1,\"userId\":2,\"allowed\":true,\"id\":5}",
+      "6": "{\"permissionId\":2,\"userId\":2,\"allowed\":true,\"id\":6}",
+      "7": "{\"permissionId\":2,\"userId\":3,\"allowed\":true,\"id\":7}"
     },
     "permissions": {
       "1": "{\"name\":\"CreateUser\",\"id\":1}",

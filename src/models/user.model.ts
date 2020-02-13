@@ -3,10 +3,10 @@ import { IAuthUser } from 'loopback4-authentication';
 import { UserRole, UserRoleWithRelations } from './user-role.model';
 import { UserPermission, UserPermissionWithRelations } from './user-permission.model';
 import { Profile } from './profile.dto';
+import { Role } from './role.model';
+import { Permission } from './permission.model';
 
-@model({
-	name: 'users',
-})
+@model({ name: 'users' })
 export class User extends Entity implements IAuthUser {
 	@property({
 		type: 'number',
@@ -33,10 +33,10 @@ export class User extends Entity implements IAuthUser {
 	profile: Profile;
 
 	@property({
-		type: 'boolean',
-		default: false,
+		type: 'date',
+		default: () => new Date(),
 	})
-	archived: boolean;
+	archived: Date;
 
 	@hasMany(() => UserRole, {
 		keyFrom: 'id',
@@ -47,6 +47,20 @@ export class User extends Entity implements IAuthUser {
 
 	@hasMany(() => UserPermission, { keyTo: 'userId' })
 	userPermissions: UserPermission[];
+
+	@property({
+		type: 'array',
+		itemType: 'object',
+		required: true,
+	})
+	roles: Role[] = [];
+
+	@property({
+		type: 'array',
+		itemType: 'object',
+		required: true,
+	})
+	permissions: Permission[] = [];
 
 	constructor(data?: Partial<User>) {
 		super(data);

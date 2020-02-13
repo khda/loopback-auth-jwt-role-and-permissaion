@@ -1,3 +1,4 @@
+import path from 'path';
 import { BootMixin } from '@loopback/boot';
 import { ApplicationConfig } from '@loopback/core';
 import {
@@ -7,7 +8,6 @@ import {
 import { RepositoryMixin } from '@loopback/repository';
 import { RestApplication } from '@loopback/rest';
 import { ServiceMixin } from '@loopback/service-proxy';
-import path from 'path';
 import { MySequence } from './sequence';
 
 import {
@@ -36,9 +36,9 @@ export class Project1AuthApplication extends BootMixin(
 		this.static('/', path.join(__dirname, '../public'));
 
 		// Customize @loopback/rest-explorer configuration here
-		this.component(RestExplorerComponent);
 		this.bind(RestExplorerBindings.CONFIG)
 			.to({ path: '/explorer' });
+		this.component(RestExplorerComponent);
 
 		// Add authentication component
 		this.component(AuthenticationComponent);
@@ -48,9 +48,9 @@ export class Project1AuthApplication extends BootMixin(
 			.toProvider(BearerTokenVerifyProvider);
 
 		// Add authorization component
-		this.component(AuthorizationComponent);
 		this.bind(AuthorizationBindings.CONFIG)
 			.to({ allowAlwaysPaths: ['/explorer'] });
+		this.component(AuthorizationComponent);
 
 		this.projectRoot = __dirname;
 		// Customize @loopback/boot Booter Conventions here

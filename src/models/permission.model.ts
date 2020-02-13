@@ -19,6 +19,11 @@ export class Permission extends Entity {
 	})
 	name: string;
 
+	@property({
+		type: 'string',
+	})
+	description?: string;
+
 	@hasMany(() => RolePermission, { keyTo: 'permissionId' })
 	rolePermissions: RolePermission[];
 
