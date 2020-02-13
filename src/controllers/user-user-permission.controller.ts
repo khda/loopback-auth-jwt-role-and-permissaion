@@ -15,16 +15,13 @@ import {
   post,
   requestBody,
 } from '@loopback/rest';
-import {
-  User,
-  UserPermission,
-} from '../models';
+import {User, UserPermission} from '../models';
 import {UserRepository} from '../repositories';
 
 export class UserUserPermissionController {
   constructor(
     @repository(UserRepository) protected userRepository: UserRepository,
-  ) { }
+  ) {}
 
   @get('/users/{id}/user-permissions', {
     responses: {
@@ -49,7 +46,9 @@ export class UserUserPermissionController {
     responses: {
       '200': {
         description: 'User model instance',
-        content: {'application/json': {schema: getModelSchemaRef(UserPermission)}},
+        content: {
+          'application/json': {schema: getModelSchemaRef(UserPermission)},
+        },
       },
     },
   })
@@ -61,11 +60,12 @@ export class UserUserPermissionController {
           schema: getModelSchemaRef(UserPermission, {
             title: 'NewUserPermissionInUser',
             exclude: ['id'],
-            optional: ['userId']
+            optional: ['userId'],
           }),
         },
       },
-    }) userPermission: Omit<UserPermission, 'id'>,
+    })
+    userPermission: Omit<UserPermission, 'id'>,
   ): Promise<UserPermission> {
     return this.userRepository.userPermissions(id).create(userPermission);
   }
@@ -88,7 +88,8 @@ export class UserUserPermissionController {
       },
     })
     userPermission: Partial<UserPermission>,
-    @param.query.object('where', getWhereSchemaFor(UserPermission)) where?: Where<UserPermission>,
+    @param.query.object('where', getWhereSchemaFor(UserPermission))
+    where?: Where<UserPermission>,
   ): Promise<Count> {
     return this.userRepository.userPermissions(id).patch(userPermission, where);
   }
@@ -103,7 +104,8 @@ export class UserUserPermissionController {
   })
   async delete(
     @param.path.number('id') id: number,
-    @param.query.object('where', getWhereSchemaFor(UserPermission)) where?: Where<UserPermission>,
+    @param.query.object('where', getWhereSchemaFor(UserPermission))
+    where?: Where<UserPermission>,
   ): Promise<Count> {
     return this.userRepository.userPermissions(id).delete(where);
   }

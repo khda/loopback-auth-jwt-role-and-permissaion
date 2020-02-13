@@ -23,14 +23,16 @@ import {UserPermissionRepository} from '../repositories';
 export class UserPermissionController {
   constructor(
     @repository(UserPermissionRepository)
-    public userPermissionRepository : UserPermissionRepository,
+    public userPermissionRepository: UserPermissionRepository,
   ) {}
 
   @post('/user-permissions', {
     responses: {
       '200': {
         description: 'UserPermission model instance',
-        content: {'application/json': {schema: getModelSchemaRef(UserPermission)}},
+        content: {
+          'application/json': {schema: getModelSchemaRef(UserPermission)},
+        },
       },
     },
   })
@@ -59,7 +61,8 @@ export class UserPermissionController {
     },
   })
   async count(
-    @param.query.object('where', getWhereSchemaFor(UserPermission)) where?: Where<UserPermission>,
+    @param.query.object('where', getWhereSchemaFor(UserPermission))
+    where?: Where<UserPermission>,
   ): Promise<Count> {
     return this.userPermissionRepository.count(where);
   }
@@ -72,7 +75,9 @@ export class UserPermissionController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(UserPermission, {includeRelations: true}),
+              items: getModelSchemaRef(UserPermission, {
+                includeRelations: true,
+              }),
             },
           },
         },
@@ -80,7 +85,8 @@ export class UserPermissionController {
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(UserPermission)) filter?: Filter<UserPermission>,
+    @param.query.object('filter', getFilterSchemaFor(UserPermission))
+    filter?: Filter<UserPermission>,
   ): Promise<UserPermission[]> {
     return this.userPermissionRepository.find(filter);
   }
@@ -102,7 +108,8 @@ export class UserPermissionController {
       },
     })
     userPermission: UserPermission,
-    @param.query.object('where', getWhereSchemaFor(UserPermission)) where?: Where<UserPermission>,
+    @param.query.object('where', getWhereSchemaFor(UserPermission))
+    where?: Where<UserPermission>,
   ): Promise<Count> {
     return this.userPermissionRepository.updateAll(userPermission, where);
   }
@@ -121,7 +128,8 @@ export class UserPermissionController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.query.object('filter', getFilterSchemaFor(UserPermission)) filter?: Filter<UserPermission>
+    @param.query.object('filter', getFilterSchemaFor(UserPermission))
+    filter?: Filter<UserPermission>,
   ): Promise<UserPermission> {
     return this.userPermissionRepository.findById(id, filter);
   }

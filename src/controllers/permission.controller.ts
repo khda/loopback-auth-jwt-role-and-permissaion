@@ -23,7 +23,7 @@ import {PermissionRepository} from '../repositories';
 export class PermissionController {
   constructor(
     @repository(PermissionRepository)
-    public permissionRepository : PermissionRepository,
+    public permissionRepository: PermissionRepository,
   ) {}
 
   @post('/permissions', {
@@ -59,7 +59,8 @@ export class PermissionController {
     },
   })
   async count(
-    @param.query.object('where', getWhereSchemaFor(Permission)) where?: Where<Permission>,
+    @param.query.object('where', getWhereSchemaFor(Permission))
+    where?: Where<Permission>,
   ): Promise<Count> {
     return this.permissionRepository.count(where);
   }
@@ -80,7 +81,8 @@ export class PermissionController {
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(Permission)) filter?: Filter<Permission>,
+    @param.query.object('filter', getFilterSchemaFor(Permission))
+    filter?: Filter<Permission>,
   ): Promise<Permission[]> {
     return this.permissionRepository.find(filter);
   }
@@ -102,7 +104,8 @@ export class PermissionController {
       },
     })
     permission: Permission,
-    @param.query.object('where', getWhereSchemaFor(Permission)) where?: Where<Permission>,
+    @param.query.object('where', getWhereSchemaFor(Permission))
+    where?: Where<Permission>,
   ): Promise<Count> {
     return this.permissionRepository.updateAll(permission, where);
   }
@@ -121,7 +124,8 @@ export class PermissionController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.query.object('filter', getFilterSchemaFor(Permission)) filter?: Filter<Permission>
+    @param.query.object('filter', getFilterSchemaFor(Permission))
+    filter?: Filter<Permission>,
   ): Promise<Permission> {
     return this.permissionRepository.findById(id, filter);
   }

@@ -15,16 +15,13 @@ import {
   post,
   requestBody,
 } from '@loopback/rest';
-import {
-  User,
-  UserRole,
-} from '../models';
+import {User, UserRole} from '../models';
 import {UserRepository} from '../repositories';
 
 export class UserUserRoleController {
   constructor(
     @repository(UserRepository) protected userRepository: UserRepository,
-  ) { }
+  ) {}
 
   @get('/users/{id}/user-roles', {
     responses: {
@@ -61,11 +58,12 @@ export class UserUserRoleController {
           schema: getModelSchemaRef(UserRole, {
             title: 'NewUserRoleInUser',
             exclude: ['id'],
-            optional: ['userId']
+            optional: ['userId'],
           }),
         },
       },
-    }) userRole: Omit<UserRole, 'id'>,
+    })
+    userRole: Omit<UserRole, 'id'>,
   ): Promise<UserRole> {
     return this.userRepository.userRoles(id).create(userRole);
   }
@@ -88,7 +86,8 @@ export class UserUserRoleController {
       },
     })
     userRole: Partial<UserRole>,
-    @param.query.object('where', getWhereSchemaFor(UserRole)) where?: Where<UserRole>,
+    @param.query.object('where', getWhereSchemaFor(UserRole))
+    where?: Where<UserRole>,
   ): Promise<Count> {
     return this.userRepository.userRoles(id).patch(userRole, where);
   }
@@ -103,7 +102,8 @@ export class UserUserRoleController {
   })
   async delete(
     @param.path.number('id') id: number,
-    @param.query.object('where', getWhereSchemaFor(UserRole)) where?: Where<UserRole>,
+    @param.query.object('where', getWhereSchemaFor(UserRole))
+    where?: Where<UserRole>,
   ): Promise<Count> {
     return this.userRepository.userRoles(id).delete(where);
   }

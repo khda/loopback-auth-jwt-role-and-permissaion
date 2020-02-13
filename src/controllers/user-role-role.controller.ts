@@ -1,22 +1,13 @@
-import {
-  repository,
-} from '@loopback/repository';
-import {
-  param,
-  get,
-  getModelSchemaRef,
-} from '@loopback/rest';
-import {
-  UserRole,
-  Role,
-} from '../models';
+import {repository} from '@loopback/repository';
+import {param, get, getModelSchemaRef} from '@loopback/rest';
+import {UserRole, Role} from '../models';
 import {UserRoleRepository} from '../repositories';
 
 export class UserRoleRoleController {
   constructor(
     @repository(UserRoleRepository)
     public userRoleRepository: UserRoleRepository,
-  ) { }
+  ) {}
 
   @get('/user-roles/{id}/role', {
     responses: {

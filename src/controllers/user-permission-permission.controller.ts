@@ -1,22 +1,13 @@
-import {
-  repository,
-} from '@loopback/repository';
-import {
-  param,
-  get,
-  getModelSchemaRef,
-} from '@loopback/rest';
-import {
-  UserPermission,
-  Permission,
-} from '../models';
+import {repository} from '@loopback/repository';
+import {param, get, getModelSchemaRef} from '@loopback/rest';
+import {UserPermission, Permission} from '../models';
 import {UserPermissionRepository} from '../repositories';
 
 export class UserPermissionPermissionController {
   constructor(
     @repository(UserPermissionRepository)
     public userPermissionRepository: UserPermissionRepository,
-  ) { }
+  ) {}
 
   @get('/user-permissions/{id}/permission', {
     responses: {

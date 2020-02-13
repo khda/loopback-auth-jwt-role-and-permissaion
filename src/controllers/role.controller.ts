@@ -23,7 +23,7 @@ import {RoleRepository} from '../repositories';
 export class RoleController {
   constructor(
     @repository(RoleRepository)
-    public roleRepository : RoleRepository,
+    public roleRepository: RoleRepository,
   ) {}
 
   @post('/roles', {
@@ -80,7 +80,8 @@ export class RoleController {
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(Role)) filter?: Filter<Role>,
+    @param.query.object('filter', getFilterSchemaFor(Role))
+    filter?: Filter<Role>,
   ): Promise<Role[]> {
     return this.roleRepository.find(filter);
   }
@@ -121,7 +122,8 @@ export class RoleController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.query.object('filter', getFilterSchemaFor(Role)) filter?: Filter<Role>
+    @param.query.object('filter', getFilterSchemaFor(Role))
+    filter?: Filter<Role>,
   ): Promise<Role> {
     return this.roleRepository.findById(id, filter);
   }

@@ -23,7 +23,7 @@ import {UserRoleRepository} from '../repositories';
 export class UserRoleController {
   constructor(
     @repository(UserRoleRepository)
-    public userRoleRepository : UserRoleRepository,
+    public userRoleRepository: UserRoleRepository,
   ) {}
 
   @post('/user-roles', {
@@ -59,7 +59,8 @@ export class UserRoleController {
     },
   })
   async count(
-    @param.query.object('where', getWhereSchemaFor(UserRole)) where?: Where<UserRole>,
+    @param.query.object('where', getWhereSchemaFor(UserRole))
+    where?: Where<UserRole>,
   ): Promise<Count> {
     return this.userRoleRepository.count(where);
   }
@@ -80,7 +81,8 @@ export class UserRoleController {
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(UserRole)) filter?: Filter<UserRole>,
+    @param.query.object('filter', getFilterSchemaFor(UserRole))
+    filter?: Filter<UserRole>,
   ): Promise<UserRole[]> {
     return this.userRoleRepository.find(filter);
   }
@@ -102,7 +104,8 @@ export class UserRoleController {
       },
     })
     userRole: UserRole,
-    @param.query.object('where', getWhereSchemaFor(UserRole)) where?: Where<UserRole>,
+    @param.query.object('where', getWhereSchemaFor(UserRole))
+    where?: Where<UserRole>,
   ): Promise<Count> {
     return this.userRoleRepository.updateAll(userRole, where);
   }
@@ -121,7 +124,8 @@ export class UserRoleController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.query.object('filter', getFilterSchemaFor(UserRole)) filter?: Filter<UserRole>
+    @param.query.object('filter', getFilterSchemaFor(UserRole))
+    filter?: Filter<UserRole>,
   ): Promise<UserRole> {
     return this.userRoleRepository.findById(id, filter);
   }

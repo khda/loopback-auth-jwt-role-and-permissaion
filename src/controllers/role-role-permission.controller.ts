@@ -15,16 +15,13 @@ import {
   post,
   requestBody,
 } from '@loopback/rest';
-import {
-  Role,
-  RolePermission,
-} from '../models';
+import {Role, RolePermission} from '../models';
 import {RoleRepository} from '../repositories';
 
 export class RoleRolePermissionController {
   constructor(
     @repository(RoleRepository) protected roleRepository: RoleRepository,
-  ) { }
+  ) {}
 
   @get('/roles/{id}/role-permissions', {
     responses: {
@@ -49,7 +46,9 @@ export class RoleRolePermissionController {
     responses: {
       '200': {
         description: 'Role model instance',
-        content: {'application/json': {schema: getModelSchemaRef(RolePermission)}},
+        content: {
+          'application/json': {schema: getModelSchemaRef(RolePermission)},
+        },
       },
     },
   })
@@ -61,11 +60,12 @@ export class RoleRolePermissionController {
           schema: getModelSchemaRef(RolePermission, {
             title: 'NewRolePermissionInRole',
             exclude: ['id'],
-            optional: ['roleId']
+            optional: ['roleId'],
           }),
         },
       },
-    }) rolePermission: Omit<RolePermission, 'id'>,
+    })
+    rolePermission: Omit<RolePermission, 'id'>,
   ): Promise<RolePermission> {
     return this.roleRepository.rolePermissions(id).create(rolePermission);
   }
@@ -88,7 +88,8 @@ export class RoleRolePermissionController {
       },
     })
     rolePermission: Partial<RolePermission>,
-    @param.query.object('where', getWhereSchemaFor(RolePermission)) where?: Where<RolePermission>,
+    @param.query.object('where', getWhereSchemaFor(RolePermission))
+    where?: Where<RolePermission>,
   ): Promise<Count> {
     return this.roleRepository.rolePermissions(id).patch(rolePermission, where);
   }
@@ -103,7 +104,8 @@ export class RoleRolePermissionController {
   })
   async delete(
     @param.path.number('id') id: number,
-    @param.query.object('where', getWhereSchemaFor(RolePermission)) where?: Where<RolePermission>,
+    @param.query.object('where', getWhereSchemaFor(RolePermission))
+    where?: Where<RolePermission>,
   ): Promise<Count> {
     return this.roleRepository.rolePermissions(id).delete(where);
   }

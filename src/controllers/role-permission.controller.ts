@@ -23,14 +23,16 @@ import {RolePermissionRepository} from '../repositories';
 export class RolePermissionController {
   constructor(
     @repository(RolePermissionRepository)
-    public rolePermissionRepository : RolePermissionRepository,
+    public rolePermissionRepository: RolePermissionRepository,
   ) {}
 
   @post('/role-permissions', {
     responses: {
       '200': {
         description: 'RolePermission model instance',
-        content: {'application/json': {schema: getModelSchemaRef(RolePermission)}},
+        content: {
+          'application/json': {schema: getModelSchemaRef(RolePermission)},
+        },
       },
     },
   })
@@ -59,7 +61,8 @@ export class RolePermissionController {
     },
   })
   async count(
-    @param.query.object('where', getWhereSchemaFor(RolePermission)) where?: Where<RolePermission>,
+    @param.query.object('where', getWhereSchemaFor(RolePermission))
+    where?: Where<RolePermission>,
   ): Promise<Count> {
     return this.rolePermissionRepository.count(where);
   }
@@ -72,7 +75,9 @@ export class RolePermissionController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(RolePermission, {includeRelations: true}),
+              items: getModelSchemaRef(RolePermission, {
+                includeRelations: true,
+              }),
             },
           },
         },
@@ -80,7 +85,8 @@ export class RolePermissionController {
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(RolePermission)) filter?: Filter<RolePermission>,
+    @param.query.object('filter', getFilterSchemaFor(RolePermission))
+    filter?: Filter<RolePermission>,
   ): Promise<RolePermission[]> {
     return this.rolePermissionRepository.find(filter);
   }
@@ -102,7 +108,8 @@ export class RolePermissionController {
       },
     })
     rolePermission: RolePermission,
-    @param.query.object('where', getWhereSchemaFor(RolePermission)) where?: Where<RolePermission>,
+    @param.query.object('where', getWhereSchemaFor(RolePermission))
+    where?: Where<RolePermission>,
   ): Promise<Count> {
     return this.rolePermissionRepository.updateAll(rolePermission, where);
   }
@@ -121,7 +128,8 @@ export class RolePermissionController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.query.object('filter', getFilterSchemaFor(RolePermission)) filter?: Filter<RolePermission>
+    @param.query.object('filter', getFilterSchemaFor(RolePermission))
+    filter?: Filter<RolePermission>,
   ): Promise<RolePermission> {
     return this.rolePermissionRepository.findById(id, filter);
   }
