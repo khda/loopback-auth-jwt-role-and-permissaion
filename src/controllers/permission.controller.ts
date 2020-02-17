@@ -19,6 +19,9 @@ import {
 } from '@loopback/rest';
 import {Permission} from '../models';
 import {PermissionRepository} from '../repositories';
+import {authenticate, STRATEGY} from 'loopback4-authentication';
+import {authorize} from 'loopback4-authorization';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 export class PermissionController {
   constructor(
@@ -26,7 +29,10 @@ export class PermissionController {
     public permissionRepository: PermissionRepository,
   ) {}
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Create'])
   @post('/permissions', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Permission model instance',
@@ -50,7 +56,10 @@ export class PermissionController {
     return this.permissionRepository.create(permission);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/permissions/count', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Permission model count',
@@ -65,7 +74,10 @@ export class PermissionController {
     return this.permissionRepository.count(where);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/permissions', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Array of Permission model instances',
@@ -87,7 +99,10 @@ export class PermissionController {
     return this.permissionRepository.find(filter);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @patch('/permissions', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Permission PATCH success count',
@@ -110,7 +125,10 @@ export class PermissionController {
     return this.permissionRepository.updateAll(permission, where);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Permission model instance',
@@ -130,7 +148,10 @@ export class PermissionController {
     return this.permissionRepository.findById(id, filter);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @patch('/permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'Permission PATCH success',
@@ -151,7 +172,10 @@ export class PermissionController {
     await this.permissionRepository.updateById(id, permission);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @put('/permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'Permission PUT success',
@@ -165,7 +189,10 @@ export class PermissionController {
     await this.permissionRepository.replaceById(id, permission);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Delete'])
   @del('/permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'Permission DELETE success',

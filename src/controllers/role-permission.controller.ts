@@ -19,6 +19,9 @@ import {
 } from '@loopback/rest';
 import {RolePermission} from '../models';
 import {RolePermissionRepository} from '../repositories';
+import {authenticate, STRATEGY} from 'loopback4-authentication';
+import {authorize} from 'loopback4-authorization';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 export class RolePermissionController {
   constructor(
@@ -26,7 +29,10 @@ export class RolePermissionController {
     public rolePermissionRepository: RolePermissionRepository,
   ) {}
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Create'])
   @post('/role-permissions', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'RolePermission model instance',
@@ -52,7 +58,10 @@ export class RolePermissionController {
     return this.rolePermissionRepository.create(rolePermission);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/role-permissions/count', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'RolePermission model count',
@@ -67,7 +76,10 @@ export class RolePermissionController {
     return this.rolePermissionRepository.count(where);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/role-permissions', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Array of RolePermission model instances',
@@ -91,7 +103,10 @@ export class RolePermissionController {
     return this.rolePermissionRepository.find(filter);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @patch('/role-permissions', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'RolePermission PATCH success count',
@@ -114,7 +129,10 @@ export class RolePermissionController {
     return this.rolePermissionRepository.updateAll(rolePermission, where);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/role-permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'RolePermission model instance',
@@ -134,7 +152,10 @@ export class RolePermissionController {
     return this.rolePermissionRepository.findById(id, filter);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @patch('/role-permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'RolePermission PATCH success',
@@ -155,7 +176,10 @@ export class RolePermissionController {
     await this.rolePermissionRepository.updateById(id, rolePermission);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @put('/role-permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'RolePermission PUT success',
@@ -169,7 +193,10 @@ export class RolePermissionController {
     await this.rolePermissionRepository.replaceById(id, rolePermission);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Delete'])
   @del('/role-permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'RolePermission DELETE success',

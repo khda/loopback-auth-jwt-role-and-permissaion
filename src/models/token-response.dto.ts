@@ -1,16 +1,20 @@
 import {Model, model, property} from '@loopback/repository';
 
-@model()
+@model({
+  name: 'token_response',
+})
 export class TokenResponse extends Model {
   @property({
     type: 'string',
     required: true,
+    name: 'access_token',
   })
   accessToken: string;
 
   @property({
     type: 'string',
     required: true,
+    name: 'refresh_token',
   })
   refreshToken: string;
 

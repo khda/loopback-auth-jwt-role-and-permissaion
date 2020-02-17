@@ -16,10 +16,8 @@ import {
   AuthorizationBindings,
   AuthorizeErrorKeys,
   AuthorizeFn,
-  // UserPermissionsFn,
 } from 'loopback4-authorization';
-// import {AuthClient, AuthUser, User} from './models';
-import {User /* , AuthUser*/} from './models';
+import {AuthUser} from './models';
 
 const {SequenceActions} = RestBindings;
 
@@ -32,15 +30,9 @@ export class MySequence implements SequenceHandler {
     @inject(SequenceActions.REJECT) public reject: Reject,
 
     @inject(AuthenticationBindings.USER_AUTH_ACTION)
-    protected authenticateRequest: AuthenticateFn<User>,
-    // protected authenticateRequest: AuthenticateFn<AuthUser>,
-
-    // @inject(AuthenticationBindings.USER_AUTH_ACTION)
-    // protected authenticateRequest: AuthenticateFn<AuthUser>,
-    // @inject(AuthenticationBindings.CLIENT_AUTH_ACTION)
-    // protected authenticateRequestClient: AuthenticateFn<AuthClient>,
+    protected authenticateRequest: AuthenticateFn<AuthUser>,
     @inject(AuthorizationBindings.AUTHORIZE_ACTION)
-    protected checkAuthorisation: AuthorizeFn, // @inject(AuthorizationBindings.USER_PERMISSIONS) // private readonly getUserPermissions: UserPermissionsFn<string>,
+    protected checkAuthorisation: AuthorizeFn,
   ) {}
 
   async handle(context: RequestContext) {
@@ -50,19 +42,18 @@ export class MySequence implements SequenceHandler {
       const args = await this.parseParams(request, route);
 
       request.body = args[args.length - 1];
-      const user: User = await this.authenticateRequest(request);
-      // console.log(user);
+      const authUser: AuthUser = await this.authenticateRequest(request);
 
-      const userPermissionNames = user?.permissions
-        ? user.permissions.map(permission => permission.name)
+      const authUserPermissionNames = authUser?.permissions
+        ? authUser.permissions.map(permission => permission.name)
         : [];
 
       const isAccessAllowed: boolean = await this.checkAuthorisation(
-        userPermissionNames,
+        authUserPermissionNames,
         request,
       );
 
-      if (user && !isAccessAllowed) {
+      if (authUser && !isAccessAllowed) {
         throw new HttpErrors.Forbidden(AuthorizeErrorKeys.NotAllowedAccess);
       }
 

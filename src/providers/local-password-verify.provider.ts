@@ -9,7 +9,7 @@ import {
   RoleRepository,
   PermissionRepository,
 } from '../repositories';
-import {User} from '../models';
+import {User, AuthUser, UserRole, UserPermission} from '../models';
 
 export class LocalPasswordVerifyProvider
   implements Provider<VerifyFunction.LocalPasswordFn> {
@@ -32,15 +32,17 @@ export class LocalPasswordVerifyProvider
         await this.userRepository.verifyPassword(username, password),
       );
 
-      const userRoles = await this.userRoleRepository.find({
+      const authUser: AuthUser = new AuthUser(user);
+
+      const userRoles: UserRole[] = await this.userRoleRepository.find({
         where: {
-          userId: user.id,
+          userId: authUser.id,
         },
       });
 
-      const userPermissions = await this.userPermissionRepository.find({
+      const userPermissions: UserPermission[] = await this.userPermissionRepository.find({
         where: {
-          userId: user.id,
+          userId: authUser.id,
           allowed: true,
         },
       });
@@ -50,7 +52,7 @@ export class LocalPasswordVerifyProvider
         userPermission => userPermission.permissionId,
       );
 
-      user.roles = await this.roleRepository.find({
+      authUser.roles = await this.roleRepository.find({
         where: {
           id: {
             inq: roleIds,
@@ -58,7 +60,7 @@ export class LocalPasswordVerifyProvider
         },
       });
 
-      user.permissions = await this.permissionRepository.find({
+      authUser.permissions = await this.permissionRepository.find({
         where: {
           id: {
             inq: permissionIds,
@@ -66,7 +68,7 @@ export class LocalPasswordVerifyProvider
         },
       });
 
-      return user;
+      return authUser;
     };
   }
 }

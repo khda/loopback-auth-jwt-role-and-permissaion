@@ -1,11 +1,11 @@
 import {
   DefaultCrudRepository,
   repository,
-  HasManyRepositoryFactory,
+  // HasManyRepositoryFactory,
   DataObject,
 } from '@loopback/repository';
-import {User, UserRelations, UserRole, UserPermission} from '../models';
-import {FileDbDataSource} from '../datasources';
+import {User, UserRelations /*, UserRole, UserPermission*/} from '../models';
+import {PgDataSource} from '../datasources';
 import {inject, Getter} from '@loopback/core';
 import {UserRoleRepository} from './user-role.repository';
 import {UserPermissionRepository} from './user-permission.repository';
@@ -24,41 +24,41 @@ export class UserRepository extends DefaultCrudRepository<
   typeof User.prototype.id,
   UserRelations
 > {
-  public readonly userRoles: HasManyRepositoryFactory<
-    UserRole,
-    typeof User.prototype.id
-  >;
+  // public readonly userRoles: HasManyRepositoryFactory<
+  //   UserRole,
+  //   typeof User.prototype.id
+  // >;
 
-  public readonly userPermissions: HasManyRepositoryFactory<
-    UserPermission,
-    typeof User.prototype.id
-  >;
+  // public readonly userPermissions: HasManyRepositoryFactory<
+  //   UserPermission,
+  //   typeof User.prototype.id
+  // >;
   // private readonly saltRounds = 10;
 
   constructor(
-    @inject('datasources.fileDb') dataSource: FileDbDataSource,
+    @inject('datasources.pg') dataSource: PgDataSource,
     @repository.getter('UserRoleRepository')
     protected userRoleRepositoryGetter: Getter<UserRoleRepository>,
     @repository.getter('UserPermissionRepository')
     protected userPermissionRepositoryGetter: Getter<UserPermissionRepository>,
   ) {
     super(User, dataSource);
-    this.userRoles = this.createHasManyRepositoryFactoryFor(
-      'userRoles',
-      userRoleRepositoryGetter,
-    );
-    this.registerInclusionResolver(
-      'userRoles',
-      this.userRoles.inclusionResolver,
-    );
-    this.userPermissions = this.createHasManyRepositoryFactoryFor(
-      'userPermissions',
-      userPermissionRepositoryGetter,
-    );
-    this.registerInclusionResolver(
-      'userPermissions',
-      this.userPermissions.inclusionResolver,
-    );
+    // this.userRoles = this.createHasManyRepositoryFactoryFor(
+    //   'userRoles',
+    //   userRoleRepositoryGetter,
+    // );
+    // this.registerInclusionResolver(
+    //   'userRoles',
+    //   this.userRoles.inclusionResolver,
+    // );
+    // this.userPermissions = this.createHasManyRepositoryFactoryFor(
+    //   'userPermissions',
+    //   userPermissionRepositoryGetter,
+    // );
+    // this.registerInclusionResolver(
+    //   'userPermissions',
+    //   this.userPermissions.inclusionResolver,
+    // );
   }
 
   /**

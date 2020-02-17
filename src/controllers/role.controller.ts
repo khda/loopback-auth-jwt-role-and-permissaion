@@ -19,6 +19,9 @@ import {
 } from '@loopback/rest';
 import {Role} from '../models';
 import {RoleRepository} from '../repositories';
+import {authenticate, STRATEGY} from 'loopback4-authentication';
+import {authorize} from 'loopback4-authorization';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 export class RoleController {
   constructor(
@@ -26,7 +29,10 @@ export class RoleController {
     public roleRepository: RoleRepository,
   ) {}
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Create'])
   @post('/roles', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Role model instance',
@@ -50,7 +56,10 @@ export class RoleController {
     return this.roleRepository.create(role);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/roles/count', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Role model count',
@@ -64,7 +73,10 @@ export class RoleController {
     return this.roleRepository.count(where);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/roles', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Array of Role model instances',
@@ -86,7 +98,10 @@ export class RoleController {
     return this.roleRepository.find(filter);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @patch('/roles', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Role PATCH success count',
@@ -108,7 +123,10 @@ export class RoleController {
     return this.roleRepository.updateAll(role, where);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/roles/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Role model instance',
@@ -128,7 +146,10 @@ export class RoleController {
     return this.roleRepository.findById(id, filter);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @patch('/roles/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'Role PATCH success',
@@ -149,7 +170,10 @@ export class RoleController {
     await this.roleRepository.updateById(id, role);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @put('/roles/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'Role PUT success',
@@ -163,7 +187,10 @@ export class RoleController {
     await this.roleRepository.replaceById(id, role);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Delete'])
   @del('/roles/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'Role DELETE success',

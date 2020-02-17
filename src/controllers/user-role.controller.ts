@@ -19,6 +19,9 @@ import {
 } from '@loopback/rest';
 import {UserRole} from '../models';
 import {UserRoleRepository} from '../repositories';
+import {authenticate, STRATEGY} from 'loopback4-authentication';
+import {authorize} from 'loopback4-authorization';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 export class UserRoleController {
   constructor(
@@ -26,7 +29,10 @@ export class UserRoleController {
     public userRoleRepository: UserRoleRepository,
   ) {}
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Create'])
   @post('/user-roles', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'UserRole model instance',
@@ -50,7 +56,10 @@ export class UserRoleController {
     return this.userRoleRepository.create(userRole);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/user-roles/count', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'UserRole model count',
@@ -65,7 +74,10 @@ export class UserRoleController {
     return this.userRoleRepository.count(where);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/user-roles', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Array of UserRole model instances',
@@ -87,7 +99,10 @@ export class UserRoleController {
     return this.userRoleRepository.find(filter);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @patch('/user-roles', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'UserRole PATCH success count',
@@ -110,7 +125,10 @@ export class UserRoleController {
     return this.userRoleRepository.updateAll(userRole, where);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/user-roles/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'UserRole model instance',
@@ -130,7 +148,10 @@ export class UserRoleController {
     return this.userRoleRepository.findById(id, filter);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @patch('/user-roles/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'UserRole PATCH success',
@@ -151,7 +172,10 @@ export class UserRoleController {
     await this.userRoleRepository.updateById(id, userRole);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @put('/user-roles/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'UserRole PUT success',
@@ -165,7 +189,10 @@ export class UserRoleController {
     await this.userRoleRepository.replaceById(id, userRole);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Delete'])
   @del('/user-roles/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'UserRole DELETE success',

@@ -1,0 +1,39 @@
+{
+	"defaultEnv": "live",
+	"live": {
+		"driver": "pg",
+		"host": {
+			"ENV": "PG_HOST"
+		},
+		"port": {
+			"ENV": "PG_PORT"
+		},
+		"user": {
+			"ENV": "PG_USER"
+		},
+		"password": {
+			"ENV": "PG_PASSWORD"
+		},
+		"database": {
+			"ENV": "PG_DATABASE"
+		}
+	},
+	"test": {
+		"driver": "pg",
+		"host": {
+			"ENV": "PG_HOST"
+		},
+		"port": {
+			"ENV": "PG_PORT"
+		},
+		"user": {
+			"ENV": "PG_TEST_USER"
+		},
+		"password": {
+			"ENV": "PG_TEST_PASSWORD"
+		},
+		"database": {
+			"ENV": "PG_TEST_DATABASE"
+		}
+	}
+}

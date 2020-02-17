@@ -13,9 +13,9 @@ import {authorize} from 'loopback4-authorization';
 
 import {
   User,
+  AuthUser,
   LoginRequest,
   TokenResponse,
-  // AuthTokenRequest,
   RefreshTokenData,
   RevokedTokenData,
   AuthTokenRefreshRequest,
@@ -30,6 +30,7 @@ import {
   RefreshTokenRepository,
   RevokedTokenDataRepository,
 } from '../repositories';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 const JWT_SECRET = 'plmnkoxswqaz';
 const JWT_ISSUER = 'lb_api';
@@ -47,17 +48,8 @@ const MILLISECOND = 1000;
  */
 export class LoginController {
   constructor(
-    // @inject(AuthenticationBindings.CURRENT_CLIENT)
-    // private readonly client: AuthClient | undefined,
-    // @inject(AuthenticationBindings.CURRENT_USER)
-    // private readonly user: AuthUser | undefined,
     @inject(AuthenticationBindings.CURRENT_USER)
-    private readonly user: User | undefined,
-    // private readonly user: User | undefined,
-    // @inject(AuthorizationBindings.USER_PERMISSIONS)
-    // private readonly getUserPermissions: UserPermissionsFn<string>,
-    // @repository(AuthClientRepository)
-    // public authClientRepository: AuthClientRepository,
+    private readonly authUser: AuthUser | undefined,
     @repository(UserRepository)
     public userRepository: UserRepository,
     @repository(UserRoleRepository)
@@ -74,47 +66,6 @@ export class LoginController {
     private readonly revokedTokenDataRepository: RevokedTokenDataRepository,
   ) {}
 
-  // @authenticateClient(STRATEGY.CLIENT_PASSWORD)
-  // @authenticate(STRATEGY.LOCAL)
-  // @authorize(['*'])
-  // @post('/auth/login', {
-  // 	responses: {
-  // 		200: {
-  // 			description: 'Auth Code',
-  // 			content: {
-  // 				'application/json': Object,
-  // 			},
-  // 		},
-  // 	},
-  // })
-  // async login(@requestBody() req: LoginRequest): Promise<{ code: string }> {
-  // 	if (!this.user) {
-  // 		throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);
-  // 	}
-
-  // 	try {
-  // 		const token = jwt.sign(
-  // 			this.user.toJSON(),
-  // 			JWT_SECRET,
-  // 			{
-  // 				expiresIn: AUTH_CODE_EXPIRATION,
-  // 				subject: req.username,
-  // 				issuer: JWT_ISSUER,
-  // 			}
-  // 		);
-
-  // 		return {
-  // 			code: token,
-  // 		};
-  // 	}
-  // 	catch (error) {
-  // 		throw new HttpErrors.InternalServerError(
-  // 			AuthErrorKeys.InvalidCredentials,
-  // 		);
-  // 	}
-  // }
-
-  // @authenticateClient(STRATEGY.CLIENT_PASSWORD)
   @authenticate(STRATEGY.LOCAL)
   @authorize(['*'])
   @post('/auth/login', {
@@ -130,79 +81,13 @@ export class LoginController {
     },
   })
   async login(@requestBody() req: LoginRequest): Promise<TokenResponse> {
-    // if (!this.user) {
-    // 	throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);
-    // }
-
-    return this.createJWT(this.user as User);
-
-    // try {
-    // 	const token = jwt.sign(
-    // 		this.user.toJSON(),
-    // 		JWT_SECRET,
-    // 		{
-    // 			expiresIn: AUTH_CODE_EXPIRATION,
-    // 			subject: req.username,
-    // 			issuer: JWT_ISSUER,
-    // 		}
-    // 	);
-
-    // 	return {
-    // 		code: token,
-    // 	};
-    // }
-    // catch (error) {
-    // 	throw new HttpErrors.InternalServerError(
-    // 		AuthErrorKeys.InvalidCredentials,
-    // 	);
-    // }
+    return this.createJWT(this.authUser as AuthUser);
   }
 
-  // /**
-  //  *
-  //  * @param req
-  //  */
-  // @authorize(['*'])
-  // @post('/auth/token', {
-  // 	responses: {
-  // 		200: {
-  // 			description: 'Token Response',
-  // 			content: {
-  // 				'application/json': {
-  // 					schema: { 'x-ts-type': TokenResponse },
-  // 				},
-  // 			},
-  // 		},
-  // 	},
-  // })
-  // async getToken(@requestBody() req: AuthTokenRequest): Promise<TokenResponse> {
-  // 	try {
-  // 		const user: User = jwt.verify(
-  // 			req.code,
-  // 			JWT_SECRET,
-  // 			{
-  // 				subject: req.username,
-  // 				issuer: JWT_ISSUER,
-  // 			},
-  // 		) as User;
-
-  // 		return await this.createJWT(user);
-  // 	}
-  // 	catch (error) {
-  // 		if (error.name === 'TokenExpiredError') {
-  // 			throw new HttpErrors.Unauthorized(AuthErrorKeys.CodeExpired);
-  // 		}
-  // 		else if (Object.prototype.isPrototypeOf.call(HttpErrors.HttpError, error)) {
-  // 			throw error;
-  // 		}
-  // 		else {
-  // 			throw new HttpErrors.Unauthorized(AuthErrorKeys.InvalidCredentials);
-  // 		}
-  // 	}
-  // }
-
+  @authenticate(STRATEGY.BEARER)
   @authorize(['*'])
   @post('/auth/token-refresh', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       200: {
         description: 'Token Response',
@@ -225,16 +110,6 @@ export class LoginController {
       throw new HttpErrors.Unauthorized(AuthErrorKeys.TokenExpired);
     }
 
-    // const authClient = await this.authClientRepository.findOne({
-    // 	where: {
-    // 		clientId: refreshPayload.clientId,
-    // 	},
-    // });
-
-    // if (!authClient) {
-    // 	throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);
-    // }
-
     const user: User | undefined = await this.userRepository.findById(
       refreshTokenData.userId,
     );
@@ -243,7 +118,7 @@ export class LoginController {
       throw new HttpErrors.Unauthorized('UserDoesNotExist');
     }
 
-    return this.createJWT(user);
+    return this.createJWT(user as AuthUser);
   }
 
   /**
@@ -251,54 +126,32 @@ export class LoginController {
    * @param payload
    * @param authClient
    */
-  private async createJWT(oldUser: User): Promise<TokenResponse> {
+  private async createJWT(oldUser: AuthUser): Promise<TokenResponse> {
     try {
       if (!oldUser || !oldUser.id) {
         throw new HttpErrors.Unauthorized('UserDoesNotExist');
       }
 
-      const user = await this.userRepository.findById(oldUser.id);
+      const user: User = await this.userRepository.findById(oldUser.id);
+      const authUser: AuthUser = new AuthUser(user);
 
-      // let user: User | undefined;
-      // if (payload.user) {
-      // 	user = payload.user;
-      // }
-      // else if (payload.userId) {
-      // 	user = await this.userRepo.findById(payload.userId);
-      // }
-      if (!user || !user.id) {
+      if (!authUser || !authUser.id) {
         throw new HttpErrors.Unauthorized('UserDoesNotExist');
       }
 
-      if (user.archived) {
+      if (authUser.archived) {
         throw new HttpErrors.Unauthorized('UserIsArchived');
       }
-      // Create user DTO for payload to JWT
-      // const authUser: AuthUser = new AuthUser(user);
-      // const role = await this.userRepo.role(user.id);
-      // const utPerms = await this.utPermsRepo.find({
-      // 	where: {
-      // 		userId: user.id,
-      // 	},
-      // 	fields: {
-      // 		permission: true,
-      // 		allowed: true,
-      // 	},
-      // });
-      // authUser.permissions = this.getUserPermissions(utPerms, role.permissions);
-      // authUser.role = role.roleKey.toString();
-
-      // const authUser: User = new User(user);
 
       const userRoles = await this.userRoleRepository.find({
         where: {
-          userId: user.id,
+          userId: authUser.id,
         },
       });
 
       const userPermissions = await this.userPermissionRepository.find({
         where: {
-          userId: user.id,
+          userId: authUser.id,
           allowed: true,
         },
       });
@@ -308,7 +161,7 @@ export class LoginController {
         userPermission => userPermission.permissionId,
       );
 
-      user.roles = await this.roleRepository.find({
+      authUser.roles = await this.roleRepository.find({
         where: {
           id: {
             inq: roleIds,
@@ -316,7 +169,7 @@ export class LoginController {
         },
       });
 
-      user.permissions = await this.permissionRepository.find({
+      authUser.permissions = await this.permissionRepository.find({
         where: {
           id: {
             inq: permissionIds,
@@ -324,7 +177,7 @@ export class LoginController {
         },
       });
 
-      const accessToken = jwt.sign(user.toJSON(), JWT_SECRET, {
+      const accessToken = jwt.sign(authUser.toJSON(), JWT_SECRET, {
         expiresIn: ACCESS_TOKEN_EXPIRATION,
         issuer: JWT_ISSUER,
       });
@@ -334,7 +187,7 @@ export class LoginController {
         .toString('hex');
 
       const refreshTokenData: RefreshTokenData = new RefreshTokenData({
-        userId: user.id,
+        userId: authUser.id,
       });
 
       await this.refreshTokenRepository.set(refreshToken, refreshTokenData, {
@@ -353,6 +206,7 @@ export class LoginController {
   @authenticate(STRATEGY.BEARER)
   @authorize(['*'])
   @post('auth/logout', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       200: {
         description: 'Logout',

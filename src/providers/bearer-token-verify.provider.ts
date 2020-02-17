@@ -5,7 +5,7 @@ import {VerifyFunction} from 'loopback4-authentication';
 import * as jwt from 'jsonwebtoken';
 
 import {RevokedTokenDataRepository} from '../repositories';
-import {User} from '../models';
+import {AuthUser} from '../models';
 
 const JWT_SECRET = 'plmnkoxswqaz';
 const JWT_ISSUER = 'lb_api';
@@ -27,11 +27,11 @@ export class BearerTokenVerifyProvider
         throw new HttpErrors.Unauthorized('TokenIsRevoked');
       }
 
-      const user = jwt.verify(accessToken, JWT_SECRET, {
+      const authUser = jwt.verify(accessToken, JWT_SECRET, {
         issuer: JWT_ISSUER,
-      }) as User;
+      }) as AuthUser;
 
-      return user;
+      return authUser;
     };
   }
 }

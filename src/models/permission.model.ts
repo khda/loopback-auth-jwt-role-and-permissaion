@@ -1,12 +1,12 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {
-  RolePermission,
-  RolePermissionWithRelations,
-} from './role-permission.model';
-import {
-  UserPermission,
-  UserPermissionWithRelations,
-} from './user-permission.model';
+import {Entity, model, property /*, hasMany*/} from '@loopback/repository';
+// import {
+//   RolePermission,
+//   RolePermissionWithRelations,
+// } from './role-permission.model';
+// import {
+//   UserPermission,
+//   UserPermissionWithRelations,
+// } from './user-permission.model';
 
 @model({
   name: 'permissions',
@@ -16,25 +16,32 @@ export class Permission extends Entity {
     type: 'number',
     id: true,
     generated: true,
+    name: 'id',
   })
   id?: number;
 
   @property({
     type: 'string',
     required: true,
+    name: 'name',
   })
   name: string;
 
   @property({
     type: 'string',
+    name: 'description',
   })
-  description?: string;
+  description?: string | null;
 
-  @hasMany(() => RolePermission, {keyTo: 'permissionId'})
-  rolePermissions: RolePermission[];
+  // @hasMany(() => RolePermission, {
+  // 	keyTo: 'permission_id'
+  // })
+  // rolePermissions: RolePermission[];
 
-  @hasMany(() => UserPermission, {keyTo: 'permissionId'})
-  userPermissions: UserPermission[];
+  // @hasMany(() => UserPermission, {
+  // 	keyTo: 'permission_id'
+  // })
+  // userPermissions: UserPermission[];
 
   constructor(data?: Partial<Permission>) {
     super(data);
@@ -43,8 +50,8 @@ export class Permission extends Entity {
 
 export interface PermissionRelations {
   // describe navigational properties here
-  rolePermissions?: RolePermissionWithRelations[];
-  userPermissions?: UserPermissionWithRelations[];
+  // rolePermissions?: RolePermissionWithRelations[];
+  // userPermissions?: UserPermissionWithRelations[];
 }
 
 export type PermissionWithRelations = Permission & PermissionRelations;

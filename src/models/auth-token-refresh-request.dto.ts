@@ -1,10 +1,13 @@
 import {Model, model, property} from '@loopback/repository';
 
-@model()
+@model({
+  name: 'auth_token_refresh_request',
+})
 export class AuthTokenRefreshRequest extends Model {
   @property({
     type: 'string',
     required: true,
+    name: 'refresh_token',
   })
   refreshToken: string;
 

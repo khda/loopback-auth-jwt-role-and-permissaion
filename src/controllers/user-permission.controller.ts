@@ -19,6 +19,9 @@ import {
 } from '@loopback/rest';
 import {UserPermission} from '../models';
 import {UserPermissionRepository} from '../repositories';
+import {authenticate, STRATEGY} from 'loopback4-authentication';
+import {authorize} from 'loopback4-authorization';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 export class UserPermissionController {
   constructor(
@@ -26,7 +29,10 @@ export class UserPermissionController {
     public userPermissionRepository: UserPermissionRepository,
   ) {}
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Create'])
   @post('/user-permissions', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'UserPermission model instance',
@@ -52,7 +58,10 @@ export class UserPermissionController {
     return this.userPermissionRepository.create(userPermission);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/user-permissions/count', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'UserPermission model count',
@@ -67,7 +76,10 @@ export class UserPermissionController {
     return this.userPermissionRepository.count(where);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/user-permissions', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Array of UserPermission model instances',
@@ -91,7 +103,10 @@ export class UserPermissionController {
     return this.userPermissionRepository.find(filter);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @patch('/user-permissions', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'UserPermission PATCH success count',
@@ -114,7 +129,10 @@ export class UserPermissionController {
     return this.userPermissionRepository.updateAll(userPermission, where);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Read'])
   @get('/user-permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'UserPermission model instance',
@@ -134,7 +152,10 @@ export class UserPermissionController {
     return this.userPermissionRepository.findById(id, filter);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @patch('/user-permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'UserPermission PATCH success',
@@ -155,7 +176,10 @@ export class UserPermissionController {
     await this.userPermissionRepository.updateById(id, userPermission);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Update'])
   @put('/user-permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'UserPermission PUT success',
@@ -169,7 +193,10 @@ export class UserPermissionController {
     await this.userPermissionRepository.replaceById(id, userPermission);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize(['Delete'])
   @del('/user-permissions/{id}', {
+		security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'UserPermission DELETE success',

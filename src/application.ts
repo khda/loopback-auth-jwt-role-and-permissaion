@@ -1,4 +1,5 @@
 import path from 'path';
+import * as dotenv from 'dotenv';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
 import {
@@ -19,6 +20,7 @@ import {
   LocalPasswordVerifyProvider,
   BearerTokenVerifyProvider,
 } from './providers';
+import {SECURITY_SCHEME_SPEC/*, SECURITY_SPEC*/} from './utils/security-spec';
 
 /**
  *
@@ -64,5 +66,16 @@ export class Project1AuthApplication extends BootMixin(
         nested: true,
       },
     };
+
+		dotenv.config();
+
+    this.api({
+      openapi: '3.0.0',
+      info: {title: 'Soonar', version: '0.1.0'},
+      paths: {},
+      components: {securitySchemes: SECURITY_SCHEME_SPEC},
+			servers: [{url: '/'}],
+			// security: SECURITY_SPEC,
+    });
   }
 }

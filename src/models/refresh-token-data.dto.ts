@@ -1,10 +1,13 @@
 import {Entity, model, property} from '@loopback/repository';
 
-@model()
+@model({
+  name: 'refresh_token_data',
+})
 export class RefreshTokenData extends Entity {
   @property({
     type: 'number',
     required: true,
+    name: 'user_id',
   })
   userId: number;
 
