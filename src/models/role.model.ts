@@ -1,4 +1,4 @@
-import {Entity, model, property /*, hasMany*/} from '@loopback/repository';
+import { Entity, model, property /*, hasMany*/ } from '@loopback/repository';
 // import {
 //   RolePermission,
 //   RolePermissionWithRelations,
@@ -7,49 +7,49 @@ import {Entity, model, property /*, hasMany*/} from '@loopback/repository';
 // } from './';
 
 @model({
-  name: 'roles',
+	name: 'roles',
 })
 export class Role extends Entity {
-  @property({
-    type: 'number',
-    id: true,
-    generated: true,
-    name: 'id',
-  })
-  id?: number;
+	@property({
+		type: 'number',
+		id: true,
+		generated: true,
+		name: 'id',
+	})
+	id?: number;
 
-  @property({
-    type: 'string',
-    required: true,
-    name: 'name',
-  })
-  name: string;
+	@property({
+		type: 'string',
+		required: true,
+		name: 'name',
+	})
+	name: string;
 
-  @property({
-    type: 'string',
-    name: 'description',
-  })
-  description?: string | null;
+	@property({
+		type: 'string',
+		name: 'description',
+	})
+	description?: string | null;
 
-  // @hasMany(() => UserRole, {
-  // 	keyTo: 'role_id'
-  // })
-  // userRoles: UserRole[];
+	// @hasMany(() => UserRole, {
+	// 	keyTo: 'role_id'
+	// })
+	// userRoles: UserRole[];
 
-  // @hasMany(() => RolePermission, {
-  // 	keyTo: 'role_id'
-  // })
-  // rolePermissions: RolePermission[];
+	// @hasMany(() => RolePermission, {
+	// 	keyTo: 'role_id'
+	// })
+	// rolePermissions: RolePermission[];
 
-  constructor(data?: Partial<Role>) {
-    super(data);
-  }
+	constructor(data?: Partial<Role>) {
+		super(data);
+	}
 }
 
 export interface RoleRelations {
-  // describe navigational properties here
-  // userRoles?: UserRoleWithRelations[];
-  // rolePermissions?: RolePermissionWithRelations[];
+	// describe navigational properties here
+	// userRoles?: UserRoleWithRelations[];
+	// rolePermissions?: RolePermissionWithRelations[];
 }
 
 export type RoleWithRelations = Role & RoleRelations;

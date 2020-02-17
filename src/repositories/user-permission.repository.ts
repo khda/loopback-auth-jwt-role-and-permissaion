@@ -1,51 +1,51 @@
 import {
-  DefaultCrudRepository,
-  // repository,
-  // BelongsToAccessor,
+	DefaultCrudRepository,
+	// repository,
+	// BelongsToAccessor,
 } from '@loopback/repository';
 import {
-  UserPermission,
-  UserPermissionRelations,
-  // Permission,
-  // User,
+	UserPermission,
+	UserPermissionRelations,
+	// Permission,
+	// User,
 } from '../models';
-import {PgDataSource} from '../datasources';
-import {inject /*, Getter*/} from '@loopback/core';
+import { PgDataSource } from '../datasources';
+import { inject /*, Getter*/ } from '@loopback/core';
 // import {PermissionRepository} from './permission.repository';
 // import {UserRepository} from './user.repository';
 
 export class UserPermissionRepository extends DefaultCrudRepository<
-  UserPermission,
-  typeof UserPermission.prototype.id,
-  UserPermissionRelations
+	UserPermission,
+	typeof UserPermission.prototype.id,
+	UserPermissionRelations
 > {
-  // public readonly permission: BelongsToAccessor<
-  //   Permission,
-  //   typeof UserPermission.prototype.id
-  // >;
+	// public readonly permission: BelongsToAccessor<
+	//   Permission,
+	//   typeof UserPermission.prototype.id
+	// >;
 
-  // public readonly user: BelongsToAccessor<
-  //   User,
-  //   typeof UserPermission.prototype.id
-  // >;
+	// public readonly user: BelongsToAccessor<
+	//   User,
+	//   typeof UserPermission.prototype.id
+	// >;
 
-  constructor(
-    @inject('datasources.pg') dataSource: PgDataSource,
-    // @repository.getter('PermissionRepository')
-    // protected permissionRepositoryGetter: Getter<PermissionRepository>,
-    // @repository.getter('UserRepository')
-    // protected userRepositoryGetter: Getter<UserRepository>,
-  ) {
-    super(UserPermission, dataSource);
-    // this.user = this.createBelongsToAccessorFor('user', userRepositoryGetter);
-    // this.registerInclusionResolver('user', this.user.inclusionResolver);
-    // this.permission = this.createBelongsToAccessorFor(
-    //   'permission',
-    //   permissionRepositoryGetter,
-    // );
-    // this.registerInclusionResolver(
-    //   'permission',
-    //   this.permission.inclusionResolver,
-    // );
-  }
+	constructor(
+		@inject('datasources.pg') dataSource: PgDataSource,
+		// @repository.getter('PermissionRepository')
+		// protected permissionRepositoryGetter: Getter<PermissionRepository>,
+		// @repository.getter('UserRepository')
+		// protected userRepositoryGetter: Getter<UserRepository>,
+	) {
+		super(UserPermission, dataSource);
+		// this.user = this.createBelongsToAccessorFor('user', userRepositoryGetter);
+		// this.registerInclusionResolver('user', this.user.inclusionResolver);
+		// this.permission = this.createBelongsToAccessorFor(
+		//   'permission',
+		//   permissionRepositoryGetter,
+		// );
+		// this.registerInclusionResolver(
+		//   'permission',
+		//   this.permission.inclusionResolver,
+		// );
+	}
 }
