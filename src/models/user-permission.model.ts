@@ -1,10 +1,6 @@
-import { Entity, model, property /*, belongsTo*/ } from '@loopback/repository';
-// import {User, UserWithRelations} from './user.model';
-// import {Permission, PermissionWithRelations} from './permission.model';
+import { Entity, model, property } from '@loopback/repository';
 
-@model({
-	name: 'user_permissions',
-})
+@model({ name: 'user_permissions' })
 export class UserPermission extends Entity {
 	@property({
 		type: 'number',
@@ -28,20 +24,6 @@ export class UserPermission extends Entity {
 	})
 	permissionId: number;
 
-	// @belongsTo(() => Permission, {
-	// 	keyTo: 'id',
-	// 	keyFrom: 'permission_id',
-	// 	name: 'permissionId',
-	// })
-	// permissionId: number;
-
-	// @belongsTo(() => User, {
-	// 	keyTo: 'id',
-	// 	keyFrom: 'user_id',
-	// 	name: 'userId',
-	// })
-	// userId: number;
-
 	@property({
 		type: 'boolean',
 		required: true,
@@ -57,8 +39,6 @@ export class UserPermission extends Entity {
 
 export interface UserPermissionRelations {
 	// describe navigational properties here
-	// user?: UserWithRelations;
-	// permission?: PermissionWithRelations;
 }
 
 export type UserPermissionWithRelations = UserPermission &

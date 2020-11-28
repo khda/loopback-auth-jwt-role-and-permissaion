@@ -73,7 +73,7 @@ export class Project1AuthApplication extends BootMixin(
 
 		this.api({
 			openapi: '3.0.0',
-			info: { title: 'Soonar', version: '0.1.0' },
+			info: { title: 'Sooonar', version: '0.1.0' },
 			paths: {},
 			components: { securitySchemes: SECURITY_SCHEME_SPEC },
 			servers: [{ url: '/' }],
